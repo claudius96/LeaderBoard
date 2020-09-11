@@ -30,6 +30,11 @@ public class Submission extends AppCompatActivity implements FirstDialogFragment
     private ImageButton backButton;
     private String first,last, email_acc, github;
     private TextView mTextView;
+    private FragmentManager mFragmentManager;
+
+    public Submission(){
+        mFragmentManager = getSupportFragmentManager();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +97,8 @@ public class Submission extends AppCompatActivity implements FirstDialogFragment
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                     //String s = response.body().toString();
-                if(response.isSuccessful()){
+                if(!response.isSuccessful()){
+                    int Ok = response.code();
                     successful();
 
 
@@ -105,6 +111,7 @@ public class Submission extends AppCompatActivity implements FirstDialogFragment
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                failure();
                 Toast.makeText(Submission.this,t.getMessage(), Toast.LENGTH_LONG).show();
 
             }
@@ -120,20 +127,16 @@ public class Submission extends AppCompatActivity implements FirstDialogFragment
     }
     public void yes(){
         submit(first,last, email_acc,github);
-
         Toast.makeText(Submission.this, "Successful",Toast.LENGTH_SHORT);
 
     }
    public void failure(){
-       FragmentManager fail = getSupportFragmentManager();
-
        Failure failure = Failure.newInstance();
-       failure.show(fail,"");
+       failure.show(mFragmentManager,"");
    }
    public void successful(){
-       FragmentManager succ = getSupportFragmentManager();
        Successful successful = Successful.newInstance();
-       successful.show(succ,"log in");
+       successful.show(mFragmentManager,"log in");
 
     }
 }
